@@ -1,9 +1,16 @@
 # 🚀 Full-Stack Portfolio (MERN + Vite + Tailwind)
 
-
+![Portfolio Screenshot](https://ibb.co/8DkD16cv,https://ibb.co/VhCtXFG)
 
 🔗 **Live Demo:** [https://profile-lilac-chi.vercel.app/](https://profile-lilac-chi.vercel.app/)  
 🔗 **Backend API:** [https://profile-1pok.onrender.com/](https://profile-1pok.onrender.com/)
+
+
+## 📎 Resume
+
+👉 Add your resume link here (https://drive.google.com/file/d/1MorPJ50oAyDaOaWWosM5i6Z3t_HKhf76/view?usp=drivesdk).
+
+---
 
 ---
 
@@ -196,11 +203,6 @@ and run all tests locally or against deployed backend.
 
 ---
 
-## 📎 Resume
-
-👉 Add your resume link here (https://drive.google.com/file/d/1MorPJ50oAyDaOaWWosM5i6Z3t_HKhf76/view?usp=drivesdk).
-
----
 
 ## 🖼 Screenshots
 
