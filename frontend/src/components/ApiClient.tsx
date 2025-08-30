@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
-const API_BASE = "https://personal-preview-1.onrender.com/api";
+const API_BASE = "https://profile-1pok.onrender.com/api";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
