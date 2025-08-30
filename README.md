@@ -1,6 +1,6 @@
 # 🚀 Full-Stack Portfolio (MERN + Vite + Tailwind)
 
-![Portfolio Screenshot](https://ibb.co/8DkD16cv,https://ibb.co/VhCtXFG)
+
 
 🔗 **Live Demo:** [https://profile-lilac-chi.vercel.app/](https://profile-lilac-chi.vercel.app/)  
 🔗 **Backend API:** [https://profile-1pok.onrender.com/](https://profile-1pok.onrender.com/)
