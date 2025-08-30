@@ -17,14 +17,16 @@ import { Badge } from "@/components/ui/badge";
 
 const API_BASE = "https://profile-1pok.onrender.com/api";
 
+// ✅ Match backend schema
 interface Project {
   _id?: string;
-  id?: string;
   title: string;
   description: string;
-  technologies?: string[];
-  github?: string;
-  demo?: string;
+  technologies: string[];
+  links?: {
+    github?: string;
+    demo?: string;
+  };
 }
 
 interface Profile {
@@ -61,6 +63,7 @@ export function Portfolio() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [works, setWorks] = useState<Work[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [skillSearchQuery, setSkillSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("home");
 
@@ -74,7 +77,7 @@ export function Portfolio() {
         fetch(`${API_BASE}/profile`),
         fetch(`${API_BASE}/projects`),
         fetch(`${API_BASE}/skills`),
-        fetch(`${API_BASE}/work`)
+        fetch(`${API_BASE}/work`),
       ]);
 
       if (profileRes.ok) setProfile(await profileRes.json());
@@ -88,22 +91,25 @@ export function Portfolio() {
     }
   };
 
+  // 🔎 Project search (title, description, technologies)
   const filteredProjects = projects.filter((project) => {
     const search = searchQuery.toLowerCase();
     return (
       project.title.toLowerCase().includes(search) ||
       project.description.toLowerCase().includes(search) ||
       (Array.isArray(project.technologies) &&
-        project.technologies.some((tech) =>
-          tech.toLowerCase().includes(search)
-        ))
+        project.technologies.some((tech) => tech.toLowerCase().includes(search)))
     );
   });
+
+  // 🔎 Skill search
+  const filteredSkills = skills.filter((skill) =>
+    skill.skill_name.toLowerCase().includes(skillSearchQuery.toLowerCase())
+  );
 
   const navItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "projects", label: "Projects", icon: Code2 },
-    { id: "skills", label: "Skills", icon: Briefcase },
     { id: "work", label: "Work", icon: Briefcase },
     { id: "about", label: "About", icon: User },
   ];
@@ -126,9 +132,6 @@ export function Portfolio() {
               <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                 <Code2 className="h-5 w-5 text-primary-foreground" />
               </div>
-              {/* <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-                Portfolio
-              </span> */}
             </div>
 
             <div className="hidden md:flex items-center gap-1">
@@ -149,33 +152,21 @@ export function Portfolio() {
             <div className="flex items-center gap-3">
               {profile?.links?.github && (
                 <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={profile.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={profile.links.github} target="_blank" rel="noopener noreferrer">
                     <Github className="h-5 w-5" />
                   </a>
                 </Button>
               )}
               {profile?.links?.linkedin && (
                 <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={profile.links.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
                     <Linkedin className="h-5 w-5" />
                   </a>
                 </Button>
               )}
               {profile?.links?.portfolio && (
                 <Button variant="ghost" size="icon" asChild>
-                  <a
-                    href={profile.links.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={profile.links.portfolio} target="_blank" rel="noopener noreferrer">
                     <Mail className="h-5 w-5" />
                   </a>
                 </Button>
@@ -212,7 +203,7 @@ export function Portfolio() {
               <div className="relative max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search projects..."
+                  placeholder="Search projects...With Skills , Name , etc"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 bg-card"
@@ -223,7 +214,7 @@ export function Portfolio() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProjects.map((project) => (
                 <Card
-                  key={project.id || project._id}
+                  key={project._id}
                   className="group bg-gradient-card hover:shadow-glow transition-all duration-300 hover:scale-[1.02] p-6 border-border"
                 >
                   <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
@@ -233,6 +224,7 @@ export function Portfolio() {
                     {project.description}
                   </p>
 
+                  {/* 🔹 Technologies */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies?.map((tech) => (
                       <Badge
@@ -245,35 +237,19 @@ export function Portfolio() {
                     ))}
                   </div>
 
+                  {/* 🔹 Links (Github + Demo) */}
                   <div className="flex gap-3">
-                    {project.github && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        asChild
-                        className="flex-1"
-                      >
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                    {project.links?.github && (
+                      <Button variant="outline" size="sm" asChild className="flex-1">
+                        <a href={project.links.github} target="_blank" rel="noopener noreferrer">
                           <Github className="h-4 w-4 mr-2" />
                           Code
                         </a>
                       </Button>
                     )}
-                    {project.demo && (
-                      <Button
-                        size="sm"
-                        asChild
-                        className="flex-1 bg-gradient-primary"
-                      >
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                    {project.links?.demo && (
+                      <Button size="sm" asChild className="flex-1 bg-gradient-primary">
+                        <a href={project.links.demo} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-4 w-4 mr-2" />
                           Live
                         </a>
@@ -287,30 +263,7 @@ export function Portfolio() {
         </section>
       )}
 
-      {/* Skills Section */}
-      {activeTab === "skills" && (
-        <section className="py-12 px-6">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              Skills & Technologies
-            </h2>
-            {skills.length > 0 ? (
-              <div className="flex flex-wrap gap-3 justify-center">
-                {skills.map((skill) => (
-                  <Badge
-                    key={skill._id || skill.skill_name}
-                    className="px-4 py-2 text-sm bg-gradient-primary text-primary-foreground hover:shadow-glow transition-all duration-300 hover:scale-110"
-                  >
-                    {skill.skill_name}
-                  </Badge>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-muted-foreground">No skills found</p>
-            )}
-          </div>
-        </section>
-      )}
+      
 
       {/* Work Section */}
       {activeTab === "work" && (
@@ -320,10 +273,7 @@ export function Portfolio() {
             {works.length > 0 ? (
               <div className="space-y-6">
                 {works.map((work) => (
-                  <Card
-                    key={work._id}
-                    className="bg-gradient-card p-6 border-border"
-                  >
+                  <Card key={work._id} className="bg-gradient-card p-6 border-border">
                     <h3 className="text-xl font-semibold">{work.role}</h3>
                     <p className="text-sm text-muted-foreground mb-2">
                       {work.company} | {work.start} - {work.end}
@@ -337,9 +287,7 @@ export function Portfolio() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-muted-foreground">
-                No work experience found.
-              </p>
+              <p className="text-center text-muted-foreground">No work experience found.</p>
             )}
           </div>
         </section>
@@ -355,16 +303,12 @@ export function Portfolio() {
                 <p>{profile.bio}</p>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    Education
-                  </h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Education</h3>
                   <p>{profile.education.join(", ")}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">
-                    Connect
-                  </h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Connect</h3>
                   <div className="flex gap-4">
                     {profile.links?.github && (
                       <a
